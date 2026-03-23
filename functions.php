@@ -28,11 +28,14 @@ function create_post_list( $atts ) {
         'category' => '',
     ], $atts );
 
+    $paged = get_query_var( 'paged' ) ? intval( get_query_var( 'paged' ) ) : 1;
+
     $args = [
         'post_type'      => 'post',
         'posts_per_page' => intval( $atts['count'] ),
         'orderby'        => 'date',
         'order'          => 'DESC',
+        'paged'          => $paged,
     ];
 
     if ( $atts['category'] ) {
@@ -47,15 +50,33 @@ function create_post_list( $atts ) {
         while ( $query->have_posts() ) : $query->the_post(); ?>
             <article class="post-card">
                 <div class="post-card__content">
-                    <h2><span class="post-date"><?php echo get_the_date( 'd M Y' ); ?></span><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+                    <h2><span class="post-date"><?php echo get_the_date( 'd M Y' ); ?></span>
+                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
                     <?php the_content(); ?>
                 </div>
             </article>
-        <?php endwhile;
+        <?php
+        endwhile;
         echo '</div>';
-        wp_reset_postdata();
+
+        $pagination = paginate_links([
+                'base'      => str_replace( 999999999, '%#%', esc_url( get_pagenum_link( 999999999 ) ) ),
+                'format'    => '?paged=%#%',
+                'current'   => $paged,
+                'total'     => $query->max_num_pages,
+                'prev_text' => '&lsaquo;',
+                'next_text' => '&rsaquo;',
+                'type'      => 'list',
+        ]);
+
+        if ( $pagination ) {
+            echo '<nav class="post-list-pagination" aria-label="Posts navigation">';
+            echo $pagination;
+            echo '</nav>';
+        }
     endif;
 
+    wp_reset_postdata();
     return ob_get_clean();
 }
 
