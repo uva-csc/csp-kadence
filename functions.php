@@ -21,7 +21,6 @@
 
 add_shortcode( 'post_list', 'create_post_list');
 
-
 function create_post_list( $atts ) {
     $atts = shortcode_atts([
         'count' => 10,
@@ -93,8 +92,14 @@ add_action( 'kadence_hero_header', function() {
     </div>
     <?php
 });
-/* kadence_loop_entry_content */
-add_action( 'kadence_loop_entry', function() {
-    echo '<div class="post-thumbnail-inner">' .
-				'<img width="768" height="462" src="https://cspdev.ddev.site/wp-content/uploads/2023/02/Flourishing-for-Educators-crop-Alexis_115410-768x462.jpg" class="attachment-medium_large size-medium_large wp-post-image" alt="Alexis Harris makes a presentation on Flourishing for Educators to a classroom of educators" decoding="async" loading="lazy" srcset="https://cspdev.ddev.site/wp-content/uploads/2023/02/Flourishing-for-Educators-crop-Alexis_115410-768x462.jpg 768w, https://cspdev.ddev.site/wp-content/uploads/2023/02/Flourishing-for-Educators-crop-Alexis_115410-300x180.jpg 300w, https://cspdev.ddev.site/wp-content/uploads/2023/02/Flourishing-for-Educators-crop-Alexis_115410-1024x615.jpg 1024w, https://cspdev.ddev.site/wp-content/uploads/2023/02/Flourishing-for-Educators-crop-Alexis_115410-1536x923.jpg 1536w, https://cspdev.ddev.site/wp-content/uploads/2023/02/Flourishing-for-Educators-crop-Alexis_115410-2048x1231.jpg 2048w" sizes="auto, (max-width: 768px) 100vw, 768px">			</div>';
-});
+
+/** Default post thumbnail  **/
+add_action( 'kadence_loop_entry_thumbnail', 'csp_carousel_fallback_thumbnail' );
+function csp_carousel_fallback_thumbnail() {
+    if ( ! has_post_thumbnail() ) {
+        $default_img = get_stylesheet_directory_uri() . '/assets/images/csp-flourish-lndscp.png';
+        echo '<a class="post-thumbnail kadence-thumbnail-ratio-2-3 default-img" aria-label="' . esc_attr( get_the_title() ) . '" href="' . get_permalink() . '">';
+        echo '<div class="post-thumbnail-inner"><img src="' . esc_url( $default_img ) . '"  alt="" /></div>';
+        echo '</a>';
+    }
+}
