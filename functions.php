@@ -103,3 +103,12 @@ function csp_carousel_fallback_thumbnail() {
         echo '</a>';
     }
 }
+
+/** Getting target=_blank to persist on links **/
+add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
+    if ( $context === 'post' ) {
+        $allowed['a']['target'] = true;
+        $allowed['a']['rel']    = true;
+    }
+    return $allowed;
+}, 10, 2 );
