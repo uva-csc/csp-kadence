@@ -1,4 +1,8 @@
 <?php
+/** adding font awesome **/
+add_action( 'wp_enqueue_scripts', function() {
+    wp_enqueue_style( 'font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css' );
+} );
 
 /**
  * Creating shortcode for post list in pages
@@ -109,6 +113,13 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     if ( isset( $allowed['a'] ) ) {
         $allowed['a']['target'] = true;
         $allowed['a']['rel']    = true;
+    }
+    if ( $context === 'post' ) {
+        $allowed['i'] = array(
+                'class'       => true,
+                'aria-hidden' => true,
+        );
+        $allowed['span']['class'] = true;
     }
     return $allowed;
 }, 10, 2 );
