@@ -109,6 +109,28 @@ function csp_carousel_fallback_thumbnail() {
 }
 
 /** Getting target=_blank to persist on links **/
+/** Getting target=_blank to persist on links, and allowing icon markup **/
+add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
+    if ( ! isset( $allowed['a'] ) || ! is_array( $allowed['a'] ) ) {
+        $allowed['a'] = array();
+    }
+    $allowed['a']['target'] = true;
+    $allowed['a']['rel']    = true;
+    $allowed['a']['title']  = true;
+
+    $allowed['i'] = array(
+            'class'       => true,
+            'aria-hidden' => true,
+    );
+
+    if ( ! isset( $allowed['span'] ) || ! is_array( $allowed['span'] ) ) {
+        $allowed['span'] = array();
+    }
+    $allowed['span']['class'] = true;
+
+    return $allowed;
+}, 10, 2 );
+/** old :
 add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     if ( isset( $allowed['a'] ) ) {
         $allowed['a']['target'] = true;
@@ -124,3 +146,4 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     }
     return $allowed;
 }, 10, 2 );
+ */
