@@ -113,6 +113,7 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     if ( isset( $allowed['a'] ) ) {
         $allowed['a']['target'] = true;
         $allowed['a']['rel']    = true;
+        $allowed['a']['title']    = true;
     }
     if ( $context === 'post' ) {
         $allowed['i'] = array(
