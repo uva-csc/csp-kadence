@@ -129,7 +129,7 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     $allowed['span']['class'] = true;
 
     return $allowed;
-}, 10, 2 );
+}, 999, 2 );
 /** old :
 add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     if ( isset( $allowed['a'] ) ) {
