@@ -108,7 +108,6 @@ function csp_carousel_fallback_thumbnail() {
     }
 }
 
-/** Getting target=_blank to persist on links **/
 /** Getting target=_blank to persist on links, and allowing icon markup **/
 add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     if ( ! isset( $allowed['a'] ) || ! is_array( $allowed['a'] ) ) {
@@ -118,10 +117,11 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
     $allowed['a']['rel']    = true;
     $allowed['a']['title']  = true;
 
-    $allowed['i'] = array(
-            'class'       => true,
-            'aria-hidden' => true,
-    );
+    if ( ! isset( $allowed['i'] ) || ! is_array( $allowed['i'] ) ) {
+        $allowed['i'] = array();
+    }
+    $allowed['i']['class']  = true;
+    $allowed['i']['aria-hidden'] = true;
 
     if ( ! isset( $allowed['span'] ) || ! is_array( $allowed['span'] ) ) {
         $allowed['span'] = array();
@@ -130,20 +130,3 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
 
     return $allowed;
 }, 999, 2 );
-/** old :
-add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
-    if ( isset( $allowed['a'] ) ) {
-        $allowed['a']['target'] = true;
-        $allowed['a']['rel']    = true;
-        $allowed['a']['title']    = true;
-    }
-    if ( $context === 'post' ) {
-        $allowed['i'] = array(
-                'class'       => true,
-                'aria-hidden' => true,
-        );
-        $allowed['span']['class'] = true;
-    }
-    return $allowed;
-}, 10, 2 );
- */
