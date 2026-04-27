@@ -132,6 +132,7 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
 }, 999, 2 );
 
 
+// Update to vimeo embed sizes
 add_filter( 'oembed_fetch_url', 'force_vimeo_square_oembed', 10, 3 );
 
 function force_vimeo_square_oembed( $provider, $url, $args ) {
@@ -143,3 +144,24 @@ function force_vimeo_square_oembed( $provider, $url, $args ) {
     }
     return $provider;
 }
+
+// Mime type for upload
+function csp_allow_vtt_txt_upload( $mimes ) {
+    $mimes['txt']    = 'text/plain';
+    $mimes['vtt']    = 'text/vtt';
+    $mimes['vtt|txt'] = 'text/plain'; // handles .vtt.txt double extension
+    return $mimes;
+}
+add_filter( 'upload_mimes', 'csp_allow_vtt_txt_upload' );
+
+function csp_allow_vtt_txt_ext( $data, $file, $filename, $mimes ) {
+    if ( empty( $data['ext'] ) && empty( $data['type'] ) ) {
+        if ( preg_match( '/\.vtt\.txt$/i', $filename ) ) {
+            $data['ext']             = 'txt';
+            $data['type']           = 'text/plain';
+            $data['proper_filename'] = $filename;
+        }
+    }
+    return $data;
+}
+add_filter( 'wp_check_filetype_and_ext', 'csp_allow_vtt_txt_ext', 10, 4 );
