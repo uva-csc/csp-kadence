@@ -160,6 +160,10 @@ function csp_allow_vtt_txt_ext( $data, $file, $filename, $mimes ) {
             $data['ext']             = 'txt';
             $data['type']           = 'text/plain';
             $data['proper_filename'] = $filename;
+        } elseif ( preg_match( '/\.txt$/i', $filename ) ) {
+            $data['ext']             = 'txt';
+            $data['type']            = 'text/plain';
+            $data['proper_filename'] = $filename;
         }
     }
     return $data;
