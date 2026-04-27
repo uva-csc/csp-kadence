@@ -130,3 +130,16 @@ add_filter( 'wp_kses_allowed_html', function( $allowed, $context ) {
 
     return $allowed;
 }, 999, 2 );
+
+
+add_filter( 'oembed_fetch_url', 'force_vimeo_square_oembed', 10, 3 );
+
+function force_vimeo_square_oembed( $provider, $url, $args ) {
+    if ( strpos( $url, 'vimeo.com' ) !== false ) {
+        $provider = add_query_arg( array(
+                'width'  => 540,
+                'height' => 540,
+        ), $provider );
+    }
+    return $provider;
+}
