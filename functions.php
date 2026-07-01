@@ -53,8 +53,10 @@ function create_post_list( $atts ) {
         while ( $query->have_posts() ) : $query->the_post(); ?>
             <article class="post-card">
                 <div class="post-card__content">
-                    <h2><span class="post-date"><?php echo get_the_date( 'd M Y' ); ?></span>
-                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
+                    <h2><time class="post-date"
+                              datetime="<?php echo esc_attr( get_the_date( 'Y-m-d' ) ); ?>"><?php echo get_the_date( 'd M Y' ); ?></time>
+                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                    </h2>
                     <?php the_content(); ?>
                 </div>
             </article>
